@@ -79,31 +79,38 @@ cv::Scalar_<uchar> convertColor(const cv::Scalar_<uchar>& inputColor, const Colo
 {
     switch (from)
     {
-    case ColorSpace::BGR:
-    {
-        switch (to)
-        {
-        case ColorSpace::Grey_Average:
-            return cv::Scalar_<uchar>::all(static_cast<uchar>(0.33333333 * (inputColor[0] + inputColor[1] + inputColor[2])));
-        case ColorSpace::Grey_Lightness:
-            return cv::Scalar_<uchar>::all(static_cast<uchar>((0.5 * (std::max(std::max(inputColor[0], inputColor[1]), inputColor[2]) +
-                                                                      std::min(std::min(inputColor[0], inputColor[1]), inputColor[2])))));
-        case ColorSpace::Grey_Luminosity:
-            return cv::Scalar_<uchar>::all(static_cast<uchar>((0.114 * inputColor[0]) + (0.587 * inputColor[1]) + (0.299 * inputColor[2])));
-        default:
-            break;
-        }
-    }
-    case ColorSpace::Grey_Average: case ColorSpace::Grey_Lightness: case ColorSpace::Grey_Luminosity:
-    {
-        switch (to)
-        {
         case ColorSpace::BGR:
-            return cv::Scalar_<uchar>::all(inputColor[0]);
-        default:
-            break;
+        {
+            switch (to)
+            {
+                case ColorSpace::Grey_Average:
+                    return cv::Scalar_<uchar>::all(static_cast<uchar>(0.33333333 * (inputColor[0] + inputColor[1] + inputColor[2])));
+
+                case ColorSpace::Grey_Lightness:
+                    return cv::Scalar_<uchar>::all(static_cast<uchar>((0.5 * (std::max(std::max(inputColor[0], inputColor[1]), inputColor[2]) +
+                                                   std::min(std::min(inputColor[0], inputColor[1]), inputColor[2])))));
+
+                case ColorSpace::Grey_Luminosity:
+                    return cv::Scalar_<uchar>::all(static_cast<uchar>((0.114 * inputColor[0]) + (0.587 * inputColor[1]) + (0.299 * inputColor[2])));
+
+                default:
+                    break;
+            }
         }
-    }
+
+        case ColorSpace::Grey_Average:
+        case ColorSpace::Grey_Lightness:
+        case ColorSpace::Grey_Luminosity:
+        {
+            switch (to)
+            {
+                case ColorSpace::BGR:
+                    return cv::Scalar_<uchar>::all(inputColor[0]);
+
+                default:
+                    break;
+            }
+        }
     }
 }
 
@@ -114,29 +121,36 @@ void convertImageColor(const cv::Mat& input, cv::Mat& output, const ColorSpace f
 
     switch (from)
     {
-    case ColorSpace::BGR:
-    {
-        CV_Assert(input.type() == CV_8UC3);
-        break;
-    }
-    case ColorSpace::Grey_Average: case ColorSpace::Grey_Lightness: case ColorSpace::Grey_Luminosity:
-    {
-        CV_Assert(input.type() == CV_8UC1);
-        break;
-    }
+        case ColorSpace::BGR:
+        {
+            CV_Assert(input.type() == CV_8UC3);
+            break;
+        }
+
+        case ColorSpace::Grey_Average:
+        case ColorSpace::Grey_Lightness:
+        case ColorSpace::Grey_Luminosity:
+        {
+            CV_Assert(input.type() == CV_8UC1);
+            break;
+        }
     }
 
     const cv::Mat inputClone = input.clone(); // Save input in case output = input
+
     switch (to)
     {
-    case ColorSpace::Grey_Average: case ColorSpace::Grey_Lightness: case ColorSpace::Grey_Luminosity:
-    {
-        output.create(inputClone.size(), CV_8UC1);
-        break;
-    }
-    case ColorSpace::BGR:
-        output.create(inputClone.size(), CV_8UC3);
-        break;
+        case ColorSpace::Grey_Average:
+        case ColorSpace::Grey_Lightness:
+        case ColorSpace::Grey_Luminosity:
+        {
+            output.create(inputClone.size(), CV_8UC1);
+            break;
+        }
+
+        case ColorSpace::BGR:
+            output.create(inputClone.size(), CV_8UC3);
+            break;
     }
 
     const uchar inputChannels = static_cast<uchar>(inputClone.channels());

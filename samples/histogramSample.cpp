@@ -6,6 +6,7 @@
 int main(int, char** argv)
 {
     const cv::Mat input = cv::imread(argv[1], cv::IMREAD_UNCHANGED);
+
     if (input.empty())
         return -1;
 

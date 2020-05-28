@@ -12,11 +12,13 @@ void split(const cv::Mat& input, std::vector<cv::Mat>& splittedInput)
     splittedInput.clear();
     const T* inputDataPtr = input.template ptr<T>(0);
     std::vector<T*> splittedDataPtrs;
+
     for (uchar c = 0; c < input.channels(); c++)
     {
         splittedInput.push_back(cv::Mat::zeros(input.size(), input.depth()));
         splittedDataPtrs.push_back(splittedInput[c].template ptr<T>(0));
     }
+
     for (unsigned long i = 0; i < input.total(); i++)
         for (uchar c = 0; c < input.channels(); c++)
             splittedDataPtrs[c][i] = inputDataPtr[i * input.channels() + c];
@@ -28,6 +30,7 @@ void merge(const std::vector<cv::Mat>& inputs, cv::Mat& mergedInputs)
     CV_Assert(inputs.size() > 0 && inputs.size() <= 4);
 
     std::vector<const T*> inputsDataPtrs;
+
     for (uchar i = 0; i < inputs.size(); i++)
     {
         CV_Assert(inputs[i].channels() == 1);
@@ -56,6 +59,7 @@ cv::Mat getMinMaxValue(const cv::Mat& input)
     for (int i = 0; i < input.rows; i++)
     {
         const T* rowPtr = input.ptr<T>(i);
+
         for (int j = 0; j < input.cols; j++)
         {
             for (int c = 0; c < input.channels(); c++)
