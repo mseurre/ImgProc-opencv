@@ -33,6 +33,7 @@ void split(const cv::Mat& input, std::vector<cv::Mat>& splittedInput)
 
 void merge(const std::vector<cv::Mat>& inputs, cv::Mat& mergedInputs)
 {
+    CV_Assert(inputs.size() > 0);
     switch(inputs[0].depth())
     {
     case CV_8U:

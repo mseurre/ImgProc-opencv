@@ -25,7 +25,7 @@ void split(const cv::Mat& input, std::vector<cv::Mat>& splittedInput)
 template<class T>
 void merge(const std::vector<cv::Mat>& inputs, cv::Mat& mergedInputs)
 {
-    CV_Assert(inputs.size() > 0 && inputs.size() <= 4);
+    CV_Assert(inputs.size() <= 4);
 
     std::vector<const T*> inputsDataPtrs;
     for (uchar i = 0; i < inputs.size(); i++)
