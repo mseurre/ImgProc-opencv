@@ -1,5 +1,5 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#ifndef UTILS_IMPL_HPP
+#define UTILS_IMPL_HPP
 
 #include <opencv2/core/mat.hpp>
 
@@ -47,6 +47,6 @@ cv::Mat getMinMaxValue(const cv::Mat& input);
 
 };
 
-#include "../src/utils.tpp"
+#include "../src/utils_impl.tpp"
 
-#endif // UTILS_HPP
+#endif // UTILS_IMPL_HPP

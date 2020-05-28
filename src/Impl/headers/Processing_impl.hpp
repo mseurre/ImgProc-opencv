@@ -1,7 +1,7 @@
 #ifndef PROCESSING_IMPL_HPP
 #define PROCESSING_IMPL_HPP
 
-#include "enum.hpp"
+#include "enum_impl.hpp"
 
 #include <opencv2/core/mat.hpp>
 

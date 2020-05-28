@@ -19,23 +19,21 @@ message(STATUS "Found OpenCV-Version ${OpenCV_VERSION}")
 message(STATUS "OpenCV Include: ${OpenCV_INCLUDE_DIRS}")
 message("------------------------------------")
 
+include_directories(headers)
+include_directories(src/Impl/headers)
+
+add_subdirectory(src/Impl)
+
 SET(HEADERS
         headers/enum.hpp
-        headers/utils.hpp
-        headers/Processing_impl.hpp
         headers/Processing.hpp
-        headers/Display_impl.hpp
         headers/Display.hpp
 	)
 
 include_directories(headers)
 
-set(SRC
-        src/utils.cpp
-        src/utils.tpp
-        src/Processing_impl.cpp
+set(SOURCES
         src/Processing.cpp
-        src/Display_impl.cpp
         src/Display.cpp
 	)
 
@@ -44,5 +42,5 @@ set(SAMPLES
         samples/colorConversionSample.cpp
         )
 
-add_executable(${PROJECT_NAME} ${SRC} ${HEADERS} ${SAMPLES})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${SAMPLES})
+target_link_libraries(${PROJECT_NAME} impl ${OpenCV_LIBS})

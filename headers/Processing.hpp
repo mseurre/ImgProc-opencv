@@ -2,6 +2,7 @@
 #define PROCESSING_HPP
 
 #include "Processing_impl.hpp"
+#include "enum.hpp"
 
 namespace Processing
 {

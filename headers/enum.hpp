@@ -3,6 +3,7 @@
 
 namespace Processing
 {
+
 enum class Conversion
 {
     BGR2Grey_Average,
@@ -31,16 +32,6 @@ enum class Histogram
     Cumulative
 };
 
-namespace impl
-{
-enum class ColorSpace
-{
-    BGR,
-    Grey_Average,
-    Grey_Lightness,
-    Grey_Luminosity
-};
-}
 }
 
 namespace Display

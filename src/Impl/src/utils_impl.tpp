@@ -1,7 +1,7 @@
-#ifndef UTILS_TPP
-#define UTILS_TPP
+#ifndef UTILS_IMPL_TPP
+#define UTILS_IMPL_TPP
 
-#include "utils.hpp"
+#include "utils_impl.hpp"
 
 namespace utils
 {
@@ -84,4 +84,4 @@ cv::Mat getMinMaxValue(const cv::Mat& input)
 
 }
 
-#endif //UTILS_TPP
+#endif //UTILS_IMPL_TPP

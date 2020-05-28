@@ -1,11 +1,11 @@
-#include "utils.hpp"
+#include "utils_impl.hpp"
 
 namespace utils
 {
 
 cv::Mat extractRow(const cv::Mat& input, const int rowIndex)
 {
-    CV_Assert(rowIndex < input.rows);
+    CV_Assert(rowIndex >= 0 && rowIndex < input.rows);
     return cv::Mat(1, input.cols, input.type(), input.row(rowIndex).data).clone();
 }
 

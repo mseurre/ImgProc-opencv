@@ -13,4 +13,4 @@ cv::Mat getHistogramDisplay(const cv::Mat& histogram, const bool curve);
 }
 }
 
-#endif // DISPLAY_HPP
+#endif // DISPLAY_IMPL_HPP
