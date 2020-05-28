@@ -38,7 +38,7 @@ cv::Mat computeImageHistogram(const cv::Mat& input)
 
 cv::Mat computeImageRowHistogram(const cv::Mat& input, const int rowIndex)
 {
-    return computeImageHistogram(utils::extractRow(input, rowIndex));
+    return computeImageHistogram(input.row(rowIndex));
 }
 
 cv::Mat computeImageColumnHistogram(const cv::Mat& input, const int columnIndex)

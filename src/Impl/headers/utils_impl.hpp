@@ -7,14 +7,6 @@ namespace utils
 {
 
 /**
- * @brief Extract a single row from a matrix
- * @param input : the input matrix
- * @param rowIndex : the index of the row to extract
- * @return an input.cols*1 matrix
- */
-cv::Mat extractRow(const cv::Mat& input, const int rowIndex);
-
-/**
  * @brief Splits an N channels matrix into a vector of N matrixes
  * @param input : the input to split
  * @param splittedInput : the vector containing the splitted channels

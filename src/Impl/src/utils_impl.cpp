@@ -3,12 +3,6 @@
 namespace utils
 {
 
-cv::Mat extractRow(const cv::Mat& input, const int rowIndex)
-{
-    CV_Assert(rowIndex >= 0 && rowIndex < input.rows);
-    return cv::Mat(1, input.cols, input.type(), input.row(rowIndex).data).clone();
-}
-
 void split(const cv::Mat& input, std::vector<cv::Mat>& splittedInput)
 {
     switch(input.depth())
