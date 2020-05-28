@@ -13,7 +13,7 @@ void checkEqual(const cv::Mat& m1, const cv::Mat& m2)
     const std::vector<T> t1(m1.ptr<T>(0), m1.ptr<T>(0) + m1.total() * m1.channels());
     const std::vector<T> t2(m2.ptr<T>(0), m2.ptr<T>(0) + m2.total() * m2.channels());
 
-    for(unsigned long i = 0; i < t1.size(); i++)
+    for (unsigned long i = 0; i < t1.size(); i++)
         BOOST_CHECK_EQUAL(t1[i], t2[i]);
 }
 
@@ -29,6 +29,7 @@ BOOST_AUTO_TEST_CASE(testSplit)
     utils::split(toSplit, splitted);
 
     BOOST_REQUIRE_EQUAL(splitted.size(), splittedCV.size());
+
     for (unsigned int i = 0; i < splitted.size(); i++)
         checkEqual<float>(splitted[i], splittedCV[i]);
 }

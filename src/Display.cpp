@@ -8,10 +8,11 @@ cv::Mat getHistogramDisplay(const cv::Mat& histogram, const Histogram mode)
 {
     switch (mode)
     {
-    case Histogram::Curve:
-        return impl::getHistogramDisplay(histogram, true);
-    case Histogram::Bar:
-        return impl::getHistogramDisplay(histogram, false);
+        case Histogram::Curve:
+            return impl::getHistogramDisplay(histogram, true);
+
+        case Histogram::Bar:
+            return impl::getHistogramDisplay(histogram, false);
     }
 }
 
