@@ -3,6 +3,7 @@
 #include <opencv2/core.hpp>
 
 #include "utils_impl.hpp"
+#include "Processing_impl.hpp"
 
 template<typename T>
 void checkEqual(const cv::Mat& m1, const cv::Mat& m2)
@@ -78,6 +79,87 @@ BOOST_AUTO_TEST_CASE(testGetMinMaxValue)
     BOOST_CHECK_EQUAL(minMax.at<int>(1, 1), 1);
     BOOST_CHECK_EQUAL(minMax.at<int>(1, 2), 2);
     BOOST_CHECK_EQUAL(minMax.at<int>(1, 3), 2);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(histograms)
+
+BOOST_AUTO_TEST_CASE(testHistogram)
+{
+    cv::Mat input(1, 1, CV_8S);
+    BOOST_CHECK_THROW(Processing::impl::computeImageHistogram(input), cv::Exception); // Depth 8U only
+    input.create(1, 1, CV_8UC2);
+    BOOST_CHECK_THROW(Processing::impl::computeImageHistogram(input), cv::Exception); // 1, 3 or 4 channels only
+    input.create(1, 1, CV_8UC4);
+    BOOST_CHECK_NO_THROW(Processing::impl::computeImageHistogram(input)); // ok
+
+    input.create(3, 3, CV_8UC4);
+    cv::randu(input, 0, 10);
+    const cv::Mat multiChannelHistogram = Processing::impl::computeImageHistogram(input);
+    BOOST_CHECK_EQUAL(multiChannelHistogram.depth(), CV_32S); // Depth of an histogram always is int (32S)
+    BOOST_CHECK_EQUAL(input.channels(), multiChannelHistogram.channels()); // For multi channels input, compute one histogram per channel
+
+    input = (cv::Mat_<uchar>(4, 4) << 0, 1, 2, 2,
+             3, 3, 3, 4,
+             4, 4, 4, 5,
+             5, 5, 5, 5);
+
+    cv::Mat groundTruthHistogram = cv::Mat::zeros(1, 256, CV_32SC1);
+    groundTruthHistogram.at<int>(0, 0) = 1;
+    groundTruthHistogram.at<int>(0, 1) = 1;
+    groundTruthHistogram.at<int>(0, 2) = 2;
+    groundTruthHistogram.at<int>(0, 3) = 3;
+    groundTruthHistogram.at<int>(0, 4) = 4;
+    groundTruthHistogram.at<int>(0, 5) = 5;
+
+    const cv::Mat histogram = Processing::impl::computeImageHistogram(input);
+    checkEqual<int>(histogram, groundTruthHistogram);
+}
+
+BOOST_AUTO_TEST_CASE(testRowHistogram)
+{
+    const int rowIndex = 20;
+    cv::Mat input(50, 50, CV_8UC3);
+    cv::randu(input, 0, 255);
+    cv::Mat inputRow = input.row(rowIndex);
+
+    BOOST_CHECK_THROW(Processing::impl::computeImageRowHistogram(input, -12), cv::Exception);
+    BOOST_CHECK_THROW(Processing::impl::computeImageRowHistogram(input, 100), cv::Exception);
+
+    checkEqual<int>(Processing::impl::computeImageRowHistogram(input, rowIndex), Processing::impl::computeImageHistogram(inputRow));
+}
+
+BOOST_AUTO_TEST_CASE(testColumnHistogram)
+{
+    const int colIndex = 20;
+    cv::Mat input(50, 50, CV_8UC3);
+    cv::randu(input, 0, 255);
+    cv::Mat inputColumn = input.t().row(colIndex);
+
+    BOOST_CHECK_THROW(Processing::impl::computeImageColumnHistogram(input, -12), cv::Exception);
+    BOOST_CHECK_THROW(Processing::impl::computeImageColumnHistogram(input, 100), cv::Exception);
+
+    checkEqual<int>(Processing::impl::computeImageColumnHistogram(input, colIndex), Processing::impl::computeImageHistogram(inputColumn));
+}
+
+BOOST_AUTO_TEST_CASE(testCumulativeHistogram)
+{
+    cv::Mat input = (cv::Mat_<uchar>(4, 4) << 0, 1, 2, 2,
+                     3, 3, 3, 4,
+                     4, 4, 4, 5,
+                     5, 5, 5, 5);
+
+    cv::Mat groundTruthCumulativeHistogram(1, 256, CV_32SC1, 16);
+    groundTruthCumulativeHistogram.at<int>(0, 0) = 1;
+    groundTruthCumulativeHistogram.at<int>(0, 1) = 2;
+    groundTruthCumulativeHistogram.at<int>(0, 2) = 4;
+    groundTruthCumulativeHistogram.at<int>(0, 3) = 7;
+    groundTruthCumulativeHistogram.at<int>(0, 4) = 11;
+    groundTruthCumulativeHistogram.at<int>(0, 5) = 16;
+
+    const cv::Mat cumulativeHistogram = Processing::impl::computeImageCumulativeHistogram(input);
+    checkEqual<int>(cumulativeHistogram, groundTruthCumulativeHistogram);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

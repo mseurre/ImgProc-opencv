@@ -38,6 +38,7 @@ cv::Mat computeImageHistogram(const cv::Mat& input)
 
 cv::Mat computeImageRowHistogram(const cv::Mat& input, const int rowIndex)
 {
+    CV_Assert(rowIndex >= 0 && rowIndex < input.rows);
     return computeImageHistogram(input.row(rowIndex));
 }
 
@@ -48,9 +49,6 @@ cv::Mat computeImageColumnHistogram(const cv::Mat& input, const int columnIndex)
 
 cv::Mat computeImageCumulativeHistogram(const cv::Mat& input)
 {
-    CV_Assert(input.depth() == CV_8U);
-    CV_Assert(input.channels() != 2);
-
     if (input.channels() > 1)
     {
         // In case of a multi-channel image, process each histogram separately and merge the results
