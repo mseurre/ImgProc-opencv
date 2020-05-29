@@ -81,18 +81,23 @@ cv::Scalar_<uchar> convertColor(const cv::Scalar_<uchar>& inputColor, const Colo
         {
             switch (to)
             {
+                    uchar color;
+
                 case ColorSpace::Grey_Average:
-                    return cv::Scalar_<uchar>::all(static_cast<uchar>(0.33333333 * (inputColor[0] + inputColor[1] + inputColor[2])));
+                    color = static_cast<uchar>((inputColor[0] + inputColor[1] + inputColor[2]) / 3);
+                    return { color, color, color };
 
                 case ColorSpace::Grey_Lightness:
-                    return cv::Scalar_<uchar>::all(static_cast<uchar>((0.5 * (std::max(std::max(inputColor[0], inputColor[1]), inputColor[2]) +
-                                                   std::min(std::min(inputColor[0], inputColor[1]), inputColor[2])))));
+                    color = static_cast<uchar>(0.5 * (std::max(std::max(inputColor[0], inputColor[1]), inputColor[2]) +
+                                                      std::min(std::min(inputColor[0], inputColor[1]), inputColor[2])));
+                    return { color, color, color };
 
                 case ColorSpace::Grey_Luminosity:
-                    return cv::Scalar_<uchar>::all(static_cast<uchar>((0.114 * inputColor[0]) + (0.587 * inputColor[1]) + (0.299 * inputColor[2])));
+                    color = static_cast<uchar>((0.114 * inputColor[0]) + (0.587 * inputColor[1]) + (0.299 * inputColor[2]));
+                    return { color, color, color };
 
                 default:
-                    break;
+                    return inputColor;
             }
         }
 
@@ -103,10 +108,10 @@ cv::Scalar_<uchar> convertColor(const cv::Scalar_<uchar>& inputColor, const Colo
             switch (to)
             {
                 case ColorSpace::BGR:
-                    return cv::Scalar_<uchar>::all(inputColor[0]);
+                    return cv::Scalar_<uchar>(inputColor[0], inputColor[0], inputColor[0]);
 
                 default:
-                    break;
+                    return inputColor;
             }
         }
     }

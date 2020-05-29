@@ -163,3 +163,54 @@ BOOST_AUTO_TEST_CASE(testCumulativeHistogram)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(colorConversion)
+
+BOOST_AUTO_TEST_CASE(testConvertColor)
+{
+    cv::Scalar_<uchar> inputColor(12, 248, 50);
+    uchar color;
+    Processing::impl::ColorSpace from = Processing::impl::ColorSpace::BGR, to;
+
+    to = Processing::impl::ColorSpace::BGR;
+    BOOST_CHECK_EQUAL(inputColor, Processing::impl::convertColor(inputColor, from, to));
+
+    to = Processing::impl::ColorSpace::Grey_Average;
+    color = ((12 + 248 + 50) / 3);
+    BOOST_CHECK_EQUAL(cv::Scalar_<uchar>(color, color, color), Processing::impl::convertColor(inputColor, from, to));
+
+    to = Processing::impl::ColorSpace::Grey_Lightness;
+    color = (static_cast<uchar>(0.5 * (248 + 12)));
+    BOOST_CHECK_EQUAL(cv::Scalar_<uchar>(color, color, color), Processing::impl::convertColor(inputColor, from, to));
+
+    to = Processing::impl::ColorSpace::Grey_Luminosity;
+    color = (static_cast<uchar>(0.114 * 12 + 0.587 * 248 + 0.299 * 50));
+    BOOST_CHECK_EQUAL(cv::Scalar_<uchar>(color, color, color), Processing::impl::convertColor(inputColor, from, to));
+
+    inputColor = { 100, 100, 100 };
+    from = Processing::impl::ColorSpace::Grey_Average;
+    to = Processing::impl::ColorSpace::BGR;
+    BOOST_CHECK_EQUAL(inputColor, Processing::impl::convertColor(inputColor, from, to));
+}
+
+BOOST_AUTO_TEST_CASE(testConvertImageColor)
+{
+    cv::Mat input(1, 1, CV_8S), output;
+    BOOST_CHECK_THROW(Processing::impl::convertImageColor(input, input, Processing::impl::ColorSpace(), Processing::impl::ColorSpace()), cv::Exception); // Depth 8U only
+    input.create(1, 1, CV_8UC2);
+    BOOST_CHECK_THROW(Processing::impl::convertImageColor(input, input, Processing::impl::ColorSpace(), Processing::impl::ColorSpace()), cv::Exception); // 1, 3 or 4 channels only
+
+    input.create(5, 5, CV_8UC1);
+    Processing::impl::ColorSpace from = Processing::impl::ColorSpace::BGR;
+    BOOST_CHECK_THROW(Processing::impl::convertImageColor(input, input, from, Processing::impl::ColorSpace()), cv::Exception); // BGR input must have 3 channels
+
+    input.create(5, 5, CV_8UC3);
+    from = Processing::impl::ColorSpace::Grey_Average;
+    BOOST_CHECK_THROW(Processing::impl::convertImageColor(input, input, from, Processing::impl::ColorSpace()), cv::Exception); // Grey input must have 1 channel
+    from = Processing::impl::ColorSpace::Grey_Lightness;
+    BOOST_CHECK_THROW(Processing::impl::convertImageColor(input, input, from, Processing::impl::ColorSpace()), cv::Exception);
+    from = Processing::impl::ColorSpace::Grey_Luminosity;
+    BOOST_CHECK_THROW(Processing::impl::convertImageColor(input, input, from, Processing::impl::ColorSpace()), cv::Exception);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
